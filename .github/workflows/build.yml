@@ -62,11 +62,15 @@ jobs:
           python3 ../configure.py -s cs2 --targets x86_64 --enable-optimize --hl2sdk-manifests=./hl2sdk-manifests --mms_path=$MMS_PATH --hl2sdk-root=$HL2SDK_ROOT
           ambuild
 
-      - name: Upload build artifacts
+      - name: Package plugin into ZIP  
+        run: |
+          cd build/package/addons
+          zip -r "$GITHUB_WORKSPACE/plugin.zip" .
+      - name: Upload build artifact ZIP  
         uses: actions/upload-artifact@v4
         with:
           name: compile
-          path: build/package/addons
+          path: plugin.zip
 
   release:
     needs: build
