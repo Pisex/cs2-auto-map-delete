@@ -73,6 +73,8 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/pisex/ubuntu20:latest
   
     steps:
       - name: Download build artifact
