@@ -80,7 +80,7 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
-          name: compile
+          name: ${{ github.event.repository.name }}
           path: .
   
       - name: List files in directory
