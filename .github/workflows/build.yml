@@ -15,7 +15,9 @@ jobs:
   build:
     permissions:
       contents: write
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/pisex/ubuntu20:latest
 
     env:
       HL2SDK_ROOT: "${{ github.workspace }}/external"
