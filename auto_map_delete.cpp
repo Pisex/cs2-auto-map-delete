@@ -49,7 +49,9 @@ bool AutoMapDelete::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen,
 
 	char szPathMaps[256];
 	g_SMAPI->PathFormat(szPathMaps, sizeof(szPathMaps), "%s/maps", g_SMAPI->GetBaseDir());
-	DeleteMaps(szPathMaps, whitelist);
+	DeleteMaps(szPathMaps, whitelist, false);
+	g_SMAPI->PathFormat(szPathMaps, sizeof(szPathMaps), "%s/../csgo_community_addons", g_SMAPI->GetBaseDir());
+	DeleteMaps(szPathMaps, whitelist, true);
 	
     return true;
 }
@@ -59,26 +61,37 @@ bool AutoMapDelete::Unload(char* error, size_t maxlen)
     return true;
 }
 
-void AutoMapDelete::DeleteMaps(const std::string& folderPath, const std::vector<std::string>& whitelist)
+void AutoMapDelete::DeleteMaps(const std::string& folderPath, const std::vector<std::string>& whitelist, bool bFolders)
 {
     try
     {
+        if (!std::filesystem::exists(folderPath)) return;
+
         for (const auto& entry : std::filesystem::directory_iterator(folderPath))
         {
             if (entry.is_regular_file())
             {
-                std::string filename = entry.path().stem().string(); // без расширения
+                std::string filename = entry.path().stem().string();
 
                 if (std::find(whitelist.begin(), whitelist.end(), filename) == whitelist.end())
                 {
                     std::filesystem::remove(entry.path());
                 }
             }
+            else if (entry.is_directory() && bFolders)
+            {
+                std::string folderName = entry.path().filename().string();
+
+                if (std::find(whitelist.begin(), whitelist.end(), folderName) == whitelist.end())
+                {
+                    std::filesystem::remove_all(entry.path());
+                }
+            }
         }
     }
     catch (const std::exception& ex)
     {
-        std::cout << "[AutoClearMaps v1.0.0] Ошибка при удалении карт: " << ex.what() << std::endl;
+        std::cout << "[AutoClearMaps v1.0.0] Ошибка при удалении карт или папок: " << ex.what() << std::endl;
     }
 }
 
