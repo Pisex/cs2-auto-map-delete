@@ -62,36 +62,26 @@ jobs:
           python3 ../configure.py -s cs2 --targets x86_64 --enable-optimize --hl2sdk-manifests=./hl2sdk-manifests --mms_path=$MMS_PATH --hl2sdk-root=$HL2SDK_ROOT
           ambuild
 
-      - name: Upload addon artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}
-          path: build/package/addons
-
-  release:
-    needs: build
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/pisex/ubuntu20:latest
-  
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}
-          path: .
-  
-      - name: List files in directory
-        run: ls -la
-  
-      - name: Find downloaded artifact
-        id: find_artifact
-        run: echo "ARTIFACT=$(ls | grep '\.zip$')" >> $GITHUB_ENV
-  
-      - name: Upload release
+      - name: Package addon into ZIP
+        run: |
+          cd build/package/addons
+          zip -r "${{ github.event.repository.name }}.zip" .
+      
+      - name: Create GitHub Release
+        id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.head_commit.message }}
-          files: ${{ env.ARTIFACT }}
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload ZIP to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: ${{ github.event.repository.name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
