@@ -103,7 +103,7 @@ const char* AutoMapDelete::GetLicense()
 
 const char* AutoMapDelete::GetVersion()
 {
-	return "1.0";
+	return "1.1";
 }
 
 const char* AutoMapDelete::GetDate()

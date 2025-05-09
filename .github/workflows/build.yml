@@ -32,18 +32,22 @@ jobs:
         run: |
           export DEBIAN_FRONTEND=noninteractive
           apt-get update -qy
-          apt-get install -y git clang-10 clang++-10 binutils
-          apt-get install -y python3
+          apt-get install -y git clang-10 clang++-10 binutils python3 python3-pip zip
+
           python3 -m pip install --upgrade pip importlib-metadata
           python3 -m pip install setuptools==45.2.0
+
           git clone https://github.com/alliedmodders/ambuild.git
           cd ambuild
-          pip install .
+          pip3 install .
           cd ..
+
           mkdir external
           cd external
-          git clone --recursive --branch master --single-branch https://github.com/alliedmodders/metamod-source.git
-          git clone --recursive --branch cs2 --single-branch https://github.com/alliedmodders/hl2sdk.git hl2sdk-cs2
+          git clone --recursive --branch master --single-branch \
+            https://github.com/alliedmodders/metamod-source.git
+          git clone --recursive --branch cs2 --single-branch \
+            https://github.com/alliedmodders/hl2sdk.git hl2sdk-cs2
           cd ../..
           git clone https://github.com/pisex/SchemaEntity.git
           cd ${{ github.workspace }}
