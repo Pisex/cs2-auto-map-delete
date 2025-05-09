@@ -65,7 +65,7 @@ jobs:
       - name: Upload addon artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cs2-auto-map-delete
+          name: ${{ github.event.repository.name }}
           path: build/package/addons
 
   release:
