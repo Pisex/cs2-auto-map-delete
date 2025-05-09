@@ -28,6 +28,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Check OS
+        run: cat /etc/os-release
+
       - name: Set up dependencies
         run: |
           export DEBIAN_FRONTEND=noninteractive
