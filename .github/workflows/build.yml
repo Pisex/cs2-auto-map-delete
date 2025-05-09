@@ -66,9 +66,11 @@ jobs:
         run: |
           cd build/package/addons
           zip -r "${{ github.event.repository.name }}.zip" .
-      
+          mv "${{ github.event.repository.name }}.zip" "${{ github.workspace }}/"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.head_commit.message }}
-          files: $(ls | grep '\.zip$')
+          tag_name: ${{ github.event.release.tag_name }}
+          files: |
+            ${{ github.workspace }}/${{ github.event.repository.name }}.zip
