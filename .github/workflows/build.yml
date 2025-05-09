@@ -68,13 +68,8 @@ jobs:
           zip -r "${{ github.event.repository.name }}.zip" .
           mv "${{ github.event.repository.name }}.zip" "${GITHUB_WORKSPACE}/"
 
-      - name: Debug workspace
-        run: |
-          echo "Workspace is: $GITHUB_WORKSPACE"
-          ls -R "$GITHUB_WORKSPACE"
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.release.tag_name }}
+          tag_name: ${{ github.event.head_commit.message }}
           files: ${{ github.workspace }}/${{ github.event.repository.name }}.zip
