@@ -64,7 +64,8 @@ jobs:
 
       - name: Package plugin into ZIP  
         run: |
-          zip -r ${{ github.event.repository.name }}.zip build/package/addons
+          cd build/package
+          zip -r ${{ github.workspace }}.zip addons
       - name: Upload build artifact ZIP  
         uses: actions/upload-artifact@v4
         with:
