@@ -37,21 +37,21 @@ jobs:
           python3 -m pip install --upgrade pip importlib-metadata
           python3 -m pip install setuptools==45.2.0
 
-          git clone https://github.com/alliedmodders/ambuild.git
-          cd ambuild
-          pip3 install .
-          cd ..
+          git clone https://github.com/alliedmodders/ambuild.git ambuild
+          pushd ambuild
+            pip3 install .
+          popd
 
-          mkdir external
-          cd external
-          git clone --recursive --branch master --single-branch \
-            https://github.com/alliedmodders/metamod-source.git
-          git clone --recursive --branch cs2 --single-branch \
-            https://github.com/alliedmodders/hl2sdk.git hl2sdk-cs2
-          cd ../..
+          mkdir -p external
+          pushd external
+            git clone --recursive --branch master --single-branch \
+              https://github.com/alliedmodders/metamod-source.git
+            git clone --recursive --branch cs2 --single-branch \
+              https://github.com/alliedmodders/hl2sdk.git hl2sdk-cs2
+          popd
+
           git clone https://github.com/pisex/SchemaEntity.git
-          cd ${{ github.workspace }}
-          
+                  
       - name: Configure and build plugin
         run: |
           mkdir build
